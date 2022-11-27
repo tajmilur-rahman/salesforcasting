@@ -14,9 +14,15 @@ public class UserDetailsServiceNew {
 
     private final UserDetailsRepository repository;
 
+
+
     @Autowired
     public UserDetailsServiceNew(UserDetailsRepository repository) {
         this.repository = repository;
+    }
+
+    public UsersDetails findByID(String userid){
+        return repository.findByUserId(userid);
     }
 
     public Optional<UsersDetails> get(UUID id) {

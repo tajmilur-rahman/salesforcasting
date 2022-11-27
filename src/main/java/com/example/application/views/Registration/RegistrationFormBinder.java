@@ -3,6 +3,7 @@ package com.example.application.views.Registration;
 import com.example.application.data.entity.UsersDetails;
 import com.example.application.data.service.UserDetailsServiceNew;
 
+import com.example.application.views.Login.LoginView;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
@@ -51,6 +52,10 @@ public class RegistrationFormBinder {
        // Set the label where bean-level error messages go
        binder.setStatusLabel(registrationForm.getErrorMessageField());
 
+       registrationForm.getGoLogin().addClickListener(event -> {
+           registrationForm.getGoLogin().getUI().ifPresent(ui->ui.navigate(LoginView.class));
+       });
+
        // And finally the submit button
        registrationForm.getSubmitButton().addClickListener(event -> {
            try {
@@ -68,6 +73,7 @@ public class RegistrationFormBinder {
                personService.update(userBean);
                // Show success message if everything went well
                showSuccess(userBean);
+               registrationForm.getGoLogin().setVisible(true);
            } catch (ValidationException exception) {
                // validation errors are already visible for each field,
                // and bean-level errors are shown in the status label.

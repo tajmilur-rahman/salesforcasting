@@ -23,6 +23,18 @@ public class CustomUserDetails implements UserDetails {
         return usersDetails.getPassword();
     }
 
+    public String getFname(){
+        return usersDetails.getFirstName();
+    }
+
+    public String getLname(){
+        return usersDetails.getLastName();
+    }
+
+    public String getEmail(){
+        return usersDetails.getEmail();
+    }
+
     @Override
     public String getUsername() {
         return usersDetails.getUserId();

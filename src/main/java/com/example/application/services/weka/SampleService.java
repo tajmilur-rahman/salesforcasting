@@ -4,6 +4,8 @@ import org.springframework.stereotype.Component;
 import tech.tablesaw.api.Table;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TreeMap;
 
 /**
@@ -27,5 +29,7 @@ public class SampleService {
     public String productCategoryName = "category";
     public String salesColName = "sales";
     public Table tableData;
+
+    public List<String> productCategories = new ArrayList<>();
 
 }

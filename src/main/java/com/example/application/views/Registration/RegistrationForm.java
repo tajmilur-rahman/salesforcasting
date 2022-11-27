@@ -34,6 +34,8 @@ public class RegistrationForm extends FormLayout {
 
    private Button submitButton;
 
+   private Button goLogin;
+
 
    public RegistrationForm() {
        title = new H3("Signup form");
@@ -42,6 +44,8 @@ public class RegistrationForm extends FormLayout {
        email = new EmailField("Email");
        role = new TextField("Role");
        userId = new TextField("User ID");
+       goLogin = new Button("Go to Login");
+
 
 
 
@@ -55,10 +59,11 @@ public class RegistrationForm extends FormLayout {
 
        submitButton = new Button("Register For Getting Started");
        submitButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+       goLogin.setVisible(false);
 
        add(title, firstName, lastName, email,role,userId, password,
                passwordConfirm, errorMessageField,
-               submitButton);
+               submitButton,goLogin);
 
        // Max width of the Form
        setMaxWidth("500px");
@@ -85,7 +90,11 @@ public class RegistrationForm extends FormLayout {
 
    public Button getSubmitButton() { return submitButton; }
 
-   private void setRequiredIndicatorVisible(HasValueAndElement<?, ?>... components) {
+    public Button getGoLogin() {
+        return goLogin;
+    }
+
+    private void setRequiredIndicatorVisible(HasValueAndElement<?, ?>... components) {
        Stream.of(components).forEach(comp -> comp.setRequiredIndicatorVisible(true));
    }
 

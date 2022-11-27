@@ -56,7 +56,11 @@ public class UserDetailsView extends Div {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         CustomUserDetails user = (CustomUserDetails) auth.getPrincipal();
-        userId.setValue(user.getUsername());
+        String userid = user.getUsername();
+
+        UsersDetails udd = personService.findByID(userid);
+
+
 
 
         add(createTitle());
@@ -67,7 +71,11 @@ public class UserDetailsView extends Div {
 
         fillForm();
 
-        userId.setValue(user.getUsername());
+
+        userId.setValue(udd.getUserId());
+        firstName.setValue(udd.getFirstName());
+        lastName.setValue(udd.getLastName());
+        email.setValue(udd.getEmail());
 
         cancel.addClickListener(e -> fillForm());
         UsersDetails ud = binder.getBean();
