@@ -83,6 +83,13 @@ public class RegistrationForm extends FormLayout {
    }
 
 
+    public TextField getUserId() {
+        return userId;
+    }
+
+    public void setUserId(TextField userId) {
+        this.userId = userId;
+    }
 
     public EmailField getEmail() {
         return email;

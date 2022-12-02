@@ -19,6 +19,7 @@ import java.util.regex.Pattern;
 
 public class RegistrationFormBinder {
 
+
    private RegistrationForm registrationForm;
 
    /**
@@ -49,6 +50,9 @@ public class RegistrationFormBinder {
                .withValidator(this::firstNameLastNameValidator).bind("lastName");
        binder.forField(registrationForm.getEmail())
                .withValidator(new EmailValidator("Please Enter Valid Email: example@domain.com")).bind("email");
+
+       binder.forField(registrationForm.getUserId())
+               .withValidator(this::userIdValidation).bind("userId");
        // The second password field is not connected to the Binder, but we
        // want the binder to re-check the password validator when the field
        // value changes. The easiest way is just to do that manually.
@@ -100,6 +104,16 @@ public class RegistrationFormBinder {
     * <p>
     * 2) Values in both fields match each other
     */
+
+   private ValidationResult userIdValidation(String userId,ValueContext ctx){
+       UsersDetails userIdD = personService.findByID(userId);
+       if(userIdD==null){
+           return ValidationResult.ok();
+       }
+
+
+       return ValidationResult.error("User Already Exists! Please Choose Different User ID");
+   }
 
    private ValidationResult firstNameLastNameValidator(String flname, ValueContext ctx){
 
