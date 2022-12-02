@@ -6,11 +6,16 @@ import com.example.application.data.service.UserDetailsServiceNew;
 import com.example.application.views.Login.LoginView;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
+import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.data.binder.ValidationResult;
 import com.vaadin.flow.data.binder.ValueContext;
+import com.vaadin.flow.data.validator.EmailValidator;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class RegistrationFormBinder {
 
@@ -38,6 +43,12 @@ public class RegistrationFormBinder {
        binder.forField(registrationForm.getPasswordField())
                .withValidator(this::passwordValidator).bind("password");
 
+       binder.forField(registrationForm.getFirstName())
+               .withValidator(this::firstNameLastNameValidator).bind("firstName");
+       binder.forField(registrationForm.getLastName())
+               .withValidator(this::firstNameLastNameValidator).bind("lastName");
+       binder.forField(registrationForm.getEmail())
+               .withValidator(new EmailValidator("Please Enter Valid Email: example@domain.com")).bind("email");
        // The second password field is not connected to the Binder, but we
        // want the binder to re-check the password validator when the field
        // value changes. The easiest way is just to do that manually.
@@ -89,6 +100,18 @@ public class RegistrationFormBinder {
     * <p>
     * 2) Values in both fields match each other
     */
+
+   private ValidationResult firstNameLastNameValidator(String flname, ValueContext ctx){
+
+       Pattern p = Pattern.compile("[^a-z ]", Pattern.CASE_INSENSITIVE);
+       Matcher m = p.matcher(flname);
+       if(!m.find()){
+        return ValidationResult.ok();
+       }
+
+       return ValidationResult.error("First Name and Last Name should not contain numbers of special characters");
+   }
+
    private ValidationResult passwordValidator(String pass1, ValueContext ctx) {
        /*
         * Just a simple length check. A real version should check for password

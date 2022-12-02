@@ -1,9 +1,11 @@
 package com.example.application.views;
 
+import com.example.application.components.appnav.AppNav;
 import com.example.application.components.appnav.AppNavItem;
 import com.example.application.views.AdvanceSetting.AdvanceSetting;
 import com.example.application.views.Calendar.CalendarView;
 import com.example.application.views.Dashboard.Dashboard;
+import com.example.application.views.FileUpload.FileUploadForm;
 import com.example.application.views.Report.Report;
 import com.example.application.views.Settings.SettingsView;
 import com.example.application.views.UserDetails.UserDetailsView;
@@ -85,6 +87,7 @@ public class NewMainLayout extends AppLayout {
         nav.add(new AppNavItem("User Details", UserDetailsView.class, "la la-user"));
         nav.add(new AppNavItem("Settings", SettingsView.class, "la la-tools"));
         nav.add(new AppNavItem("Advance Settings", AdvanceSetting.class, "la la-toolbox"));
+        nav.add(new AppNavItem("File Upload", FileUploadForm.class,"la la-upload"));
         return nav;
     }
     private Footer createFooter() {

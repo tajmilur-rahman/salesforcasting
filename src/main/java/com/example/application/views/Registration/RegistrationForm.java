@@ -82,7 +82,17 @@ public class RegistrationForm extends FormLayout {
        setColspan(submitButton, 2);
    }
 
-   public PasswordField getPasswordField() { return password; }
+
+
+    public EmailField getEmail() {
+        return email;
+    }
+
+    public void setEmail(EmailField email) {
+        this.email = email;
+    }
+
+    public PasswordField getPasswordField() { return password; }
 
    public PasswordField getPasswordConfirmField() { return passwordConfirm; }
 
@@ -92,6 +102,22 @@ public class RegistrationForm extends FormLayout {
 
     public Button getGoLogin() {
         return goLogin;
+    }
+
+    public TextField getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(TextField firstName) {
+        this.firstName = firstName;
+    }
+
+    public TextField getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(TextField lastName) {
+        this.lastName = lastName;
     }
 
     private void setRequiredIndicatorVisible(HasValueAndElement<?, ?>... components) {
