@@ -123,7 +123,7 @@ public class RegistrationFormBinder {
         return ValidationResult.ok();
        }
 
-       return ValidationResult.error("First Name and Last Name should not contain numbers of special characters");
+       return ValidationResult.error("First Name and Last Name should not contain numbers or special characters");
    }
 
    private ValidationResult passwordValidator(String pass1, ValueContext ctx) {
