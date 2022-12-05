@@ -37,9 +37,11 @@ public class TimeSeriesForecast {
         loader.setSource(file);
 
         Instances dataset = loader.getDataSet();
-        System.out.println("arrayData:"+dataset.get(5));
-        System.out.println("Date Format in data:"+dataset.attribute(dateColName).value(5));
-        System.out.println("Sales value in sales data:"+dataset.attribute(salesColName).value(5));
+
+
+        System.out.println("arrayData:"+dataset.get(0));
+        System.out.println("Date Format in data:"+dataset.attribute(dateColName).value(0));
+        System.out.println("Sales value in sales data:"+dataset.attribute(salesColName).value(0));
 
         File pfile = new File("forecast.txt");
         pfile.createNewFile();

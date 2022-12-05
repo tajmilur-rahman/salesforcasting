@@ -35,6 +35,9 @@ public class Report extends Div {
     // layout Filter button
     Button loadChart = new Button("Update Chart");
 
+    Button selectAll = new Button("Select All");
+    Button deselect = new Button("Deselect");
+
     SampleService sampleService;
     public Report(SampleService sampleService){
         this.sampleService = sampleService;
@@ -42,16 +45,23 @@ public class Report extends Div {
         loadChart.addClickListener(e->{
             updateChart();
         });
+        selectAll.addClickListener(e->{
+            listBox.select(sampleService.productCategories);
+        });
+        deselect.addClickListener(e->{
+            listBox.deselect(sampleService.productCategories);
+        });
 
     }
 
     public void addButtons(){
+
         if(sampleService.productCategories.size()>0){
             listBox.setItems(sampleService.productCategories);
         }
         listBox.setMaxHeight(100, Unit.PIXELS);
 
-        HorizontalLayout fl = new HorizontalLayout(listBox,loadChart);
+        HorizontalLayout fl = new HorizontalLayout(listBox,selectAll,deselect,loadChart);
         VerticalLayout vl = new VerticalLayout(fl);
 
         vl.setHeight("20%");
@@ -65,6 +75,7 @@ public class Report extends Div {
         BarChart bc = new BarChart();
         if(sampleService.tableData !=null){
             Set<String> selectedValues = listBox.getSelectedItems();
+
             Table data = sampleService.tableData;
             Table averageData = data.summarize(sampleService.salesColName,mean).by(sampleService.productCategoryName);
             averageData = averageData.where(t->t.stringColumn(sampleService.productCategoryName).isIn(selectedValues));

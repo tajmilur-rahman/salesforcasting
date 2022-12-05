@@ -27,8 +27,10 @@ public class AreaChartExample extends Div {
         ApexCharts areaChart = ApexChartsBuilder.get()
                 .withChart(ChartBuilder.get()
                         .withType(Type.AREA)
+
                         .withZoom(ZoomBuilder.get()
-                                .withEnabled(false)
+                                .withAutoScaleYaxis(true)
+                                .withEnabled(true)
                                 .build())
                         .build())
                 .withDataLabels(DataLabelsBuilder.get()
@@ -42,14 +44,18 @@ public class AreaChartExample extends Div {
                 .withSubtitle(TitleSubtitleBuilder.get()
                         .withText("Price Movements")
                         .withAlign(Align.LEFT).build())
-                .withLabels(IntStream.range(0, dateLables.size()).boxed().map(day -> dateLables.get(day).toString()).toArray(String[]::new))
+//                .withLabels(IntStream.range(0, dateLables.size()).boxed().map(day -> dateLables.get(day).toString()).toArray(String[]::new))
+
 
                 .withXaxis(XAxisBuilder.get()
                         .withTitle(com.github.appreciated.apexcharts.config.xaxis.builder.TitleBuilder.get()
                                 .withText("Time")
                                 .build())
-                        .withType(XAxisType.DATETIME).build())
+                        .withType(XAxisType.DATETIME)
+                        .withCategories(IntStream.range(0, dateLables.size()).boxed().map(day -> dateLables.get(day).toString()).toArray(String[]::new))
+                        .build())
                 .withYaxis(YAxisBuilder.get()
+
                         .withTitle(TitleBuilder.get()
                                 .withText("$ Sales")
                                 .build())

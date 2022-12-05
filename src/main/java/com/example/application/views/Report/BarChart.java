@@ -5,6 +5,7 @@ import com.github.appreciated.apexcharts.ApexChartsBuilder;
 import com.github.appreciated.apexcharts.config.PlotOptions;
 import com.github.appreciated.apexcharts.config.builder.*;
 import com.github.appreciated.apexcharts.config.chart.Type;
+import com.github.appreciated.apexcharts.config.chart.builder.ZoomBuilder;
 import com.github.appreciated.apexcharts.config.legend.HorizontalAlign;
 import com.github.appreciated.apexcharts.config.plotoptions.builder.BarBuilder;
 import com.github.appreciated.apexcharts.config.yaxis.builder.TitleBuilder;
@@ -20,6 +21,10 @@ public class BarChart extends Div {
         ApexCharts chart = ApexChartsBuilder.get()
                 .withChart(ChartBuilder.get()
                         .withType(Type.BAR)
+                        .withZoom(ZoomBuilder.get()
+                                .withAutoScaleYaxis(true)
+                                .withEnabled(true)
+                                .build())
                         .build())
                 .withPlotOptions(PlotOptionsBuilder.get()
                         .withBar(BarBuilder.get()

@@ -82,7 +82,7 @@ public class Dashboard extends Div {
             // update the chart
             List<String> keysShort = sampleService.productCategories.subList(0,listN);
 
-
+//            System.out.println("In Dashboard-view:"+sampleService.productCategories);
 
             for(String key:keysShort){
                 List<String> colname = sampleService.allTables.get(key).columnNames();

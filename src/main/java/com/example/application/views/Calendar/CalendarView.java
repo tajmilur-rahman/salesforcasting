@@ -70,7 +70,7 @@ public class CalendarView extends Div {
 
         submitButton.setWidth(vl.getWidth());
         submitButton.addClickListener(event -> {
-            sampleService.sampleData = "Changed in Dashboard";
+//            sampleService.sampleData = "Changed in Dashboard";
             processData();
             submitButton.getUI().ifPresent(ui -> ui.navigate(Dashboard.class));
 
@@ -89,6 +89,7 @@ public class CalendarView extends Div {
 
         LocalDate startDate = startDateTimePicker.getValue();
         LocalDate endDate = endDateTimePicker.getValue();
+        System.out.println("Date Column name from common service"+sampleService.dateColName+" Product Category name:"+sampleService.productCategoryName);
         // Filter Data based on the Date
         Table filterData = data.where(and(t->t.dateColumn(sampleService.dateColName).isBetweenExcluding(startDate,endDate)));
 
@@ -105,11 +106,14 @@ public class CalendarView extends Div {
 //        System.out.println(suData);
         TreeMap<String,Table> allTables = new TreeMap<>();
         suData = suData.sortOn(sampleService.dateColName);
+//        System.out.println("Su Data Sample");
         int jk = 0;
+        sampleService.productCategories = new ArrayList<>();
         for(String col:colvas){
             jk++;
             sampleService.productCategories.add(col);
             allTables.put(col,suData.where(t->t.stringColumn(sampleService.productCategoryName).isEqualTo(col)));
+            System.out.println("Size of the data in table:"+allTables.get(col).rowCount()+" coL:"+col);
             // Make Forecast
             File fileData = new File("localCsvFile"+jk);
             Table subtable = data.where(t->t.stringColumn(sampleService.productCategoryName).isEqualTo(col));
@@ -136,51 +140,68 @@ public class CalendarView extends Div {
             long usere = endDate.toEpochDay();
 
             long diffDays = usere - emaxd;
-            System.out.println("User Differance:"+diffDays);
+//            System.out.println("User Differance:"+diffDays);
+            sampleService.sampleData = "Showing top 5";
 
-            TimeSeriesForecast tsf = new TimeSeriesForecast("longDate",salesCol,(int)diffDays);
+
             try{
-                List<Double> newData =  tsf.makeForecast(fileData);
-                List<String> coNames = allTables.get(col).columnNames();
+                if(allTables.get(col).rowCount()>20){
+                    sampleService.sampleData = "Showing top 5";
+                    // Only predict if sufficient data
+                    TimeSeriesForecast tsf = new TimeSeriesForecast("longDate",salesCol,(int)diffDays);
+                    List<Double> newData =  tsf.makeForecast(fileData);
+                    List<String> coNames = allTables.get(col).columnNames();
 
-               // family,date,Sum [sales],longDate
-               Table lastEntry = allTables.get(col).last(1);
-               System.out.println("Forecaster Result length:"+newData.size());
-               System.out.println(lastEntry);
-                String firstColval = (String) lastEntry.column(coNames.get(0)).get(0);
-                LocalDate secondColval = (LocalDate) lastEntry.column(coNames.get(1)).get(0);
-                double thirdColVal = (double)  lastEntry.column(coNames.get(2)).get(0);
+                    // family,date,Sum [sales],longDate
+                    Table lastEntry = allTables.get(col).last(1);
+//               System.out.println("Forecaster Result length:"+newData.size());
+//               System.out.println(lastEntry);
+                    String firstColval = (String) lastEntry.column(coNames.get(0)).get(0);
+                    LocalDate secondColval = (LocalDate) lastEntry.column(coNames.get(1)).get(0);
+                    double thirdColVal = (double)  lastEntry.column(coNames.get(2)).get(0);
 //                long fourthColVal = (long)  lastEntry.column(coNames.get(3)).get(0);
-                String[] firstColValCol = new String[newData.size()];
-                LocalDate[] localDateColValCol = new LocalDate[newData.size()];
-                double[] saleColValCol = new double[newData.size()];
-                long[] longDatecolValCol = new long[newData.size()];
-                secondColval = secondColval.plusDays(1);
-                for(int i=0;i< newData.size();i++){
-                    firstColValCol[i] = firstColval;
-                    localDateColValCol[i] = secondColval;
+                    String[] firstColValCol = new String[newData.size()];
+                    LocalDate[] localDateColValCol = new LocalDate[newData.size()];
+                    double[] saleColValCol = new double[newData.size()];
+                    long[] longDatecolValCol = new long[newData.size()];
                     secondColval = secondColval.plusDays(1);
-                    saleColValCol[i] = newData.get(i);
-                    longDatecolValCol[i] = localDateColValCol[i].atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli();
-                }
-                Table newVlaTable = Table.create("Forecasted results").addColumns(
-                        StringColumn.create(coNames.get(0),firstColValCol),
-                        DateColumn.create(coNames.get(1),localDateColValCol),
-                        DoubleColumn.create(coNames.get(2),saleColValCol)
+                    for(int i=0;i< newData.size();i++){
+                        firstColValCol[i] = firstColval;
+                        localDateColValCol[i] = secondColval;
+                        secondColval = secondColval.plusDays(1);
+                        saleColValCol[i] = newData.get(i);
+                        longDatecolValCol[i] = localDateColValCol[i].atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli();
+                    }
+                    Table newVlaTable = Table.create("Forecasted results").addColumns(
+                            StringColumn.create(coNames.get(0),firstColValCol),
+                            DateColumn.create(coNames.get(1),localDateColValCol),
+                            DoubleColumn.create(coNames.get(2),saleColValCol)
 //                        ,LongColumn.create(coNames.get(3),longDatecolValCol)
-                );
-                Table currTabel =  allTables.get(col);
-                for(int i=0;i<newData.size();i++){
-                    currTabel.addRow(i,newVlaTable);
+                    );
+                    Table currTabel =  allTables.get(col);
+
+                    for(int i=0;i<newData.size();i++){
+                        currTabel.addRow(i,newVlaTable);
+                    }
+
+                    allTables.put(col,currTabel);
+
                 }
-                allTables.put(col,currTabel);
+                else {
+                    sampleService.sampleData = "There is insufficient data for forecast!";
+                }
+
 
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                System.out.println(e);
+
             }
+            File fileDataD = new File("localCsvFile"+jk);
+            fileDataD.delete();
 
 
         }
+//        System.out.println("Processing Had been Completed! Loading the Dashboard:"+allTables.keySet());
         sampleService.allTables = allTables;
 //
 //        System.out.println(suData);

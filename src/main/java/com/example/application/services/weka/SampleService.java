@@ -32,4 +32,23 @@ public class SampleService {
 
     public List<String> productCategories = new ArrayList<>();
 
+    public void resetAllVariables(){
+        sampleData = "Sample Customs";
+        startDate = "";
+        endDate = "";
+
+
+        endDateLocal = LocalDate.now();
+        startDateLocal = endDateLocal.minusMonths(1);
+        allTables = new TreeMap<>();
+
+        dateColName = "date";
+        productCategoryName = "category";
+        salesColName = "sales";
+
+
+        productCategories = new ArrayList<>();
+
+    }
+
 }
