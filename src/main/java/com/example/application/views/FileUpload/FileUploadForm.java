@@ -86,11 +86,35 @@ public class FileUploadForm extends Div {
         upload.setAcceptedFileTypes(".csv");
 
         finalizeButton.addClickListener(event -> {
-
+            invalidFile.setText("");
             String dateColumnName = DateColumnName.getValue();
             String categoryColName = ProductCategoryColumnName.getValue();
             String salesColName = SalesColumnName.getValue();
-            boolean flagTmp = false;
+            boolean timeFlag = true;
+            boolean salesFlag = true;
+            boolean categoryFlag = true;
+
+            if(data.column(salesColName).type()!=ColumnType.INTEGER && data.column(salesColName).type()!=ColumnType.DOUBLE){
+                // allow only numerical columns
+                salesFlag = false;
+                invalidFile.setText("There is issue in Sales Column Selection,");
+                invalidFile.setVisible(true);
+            }
+
+            if(data.column(categoryColName).type()!=ColumnType.INTEGER && data.column(categoryColName).type()!=ColumnType.STRING ){
+                // if not categorical
+                categoryFlag = false;
+                String oldTxt = invalidFile.getText();
+                String pre = "There is issue in ";
+                if(oldTxt.length()> pre.length()){
+                    invalidFile.setText(oldTxt+" Category Column Selection, ");
+                }
+                else {
+                    invalidFile.setText("There is issue in Category Column Selection,");
+                }
+
+                invalidFile.setVisible(true);
+            }
 
             if(data.column(categoryColName).type() == ColumnType.INTEGER){
                 // convert to string
@@ -101,9 +125,7 @@ public class FileUploadForm extends Div {
                 data = data.addColumns(StringColumn.create(categoryColName,cateString));
             }
 
-            if(data.column(dateColumnName).type()== ColumnType.LOCAL_DATE ||data.column(dateColumnName).type()== ColumnType.LOCAL_DATE_TIME ){
-                flagTmp = true;
-            }
+
 
             if(data.column(dateColumnName).type()==ColumnType.STRING){
                 String df = dateFormats.getValue();
@@ -125,8 +147,8 @@ public class FileUploadForm extends Div {
                             }
                         }
                         catch (Exception e){
-                            flagTmp = false;
-                            invalidFile.setText("Either Date column is not selected correct or date format!");
+                            timeFlag = false;
+//                            invalidFile.setText("Either Date column is not selected correct or date format!");
                         }
 
 
@@ -137,10 +159,10 @@ public class FileUploadForm extends Div {
                     data = data.addColumns(DateColumn.create(dateColumnName,localDateListmew));
                     System.out.println("Date Conversion Completed!");
                     System.out.println(data.first(5));
-                    flagTmp = true;
+                    timeFlag = true;
                 }else{
-                    invalidFile.setText("There is some issue in file please check and re-upload!");
-                    flagTmp = false;
+//                    invalidFile.setText("There is some issue in file please check and re-upload!");
+                    timeFlag = false;
                 }
 
             }
@@ -163,16 +185,35 @@ public class FileUploadForm extends Div {
                     }
                     data = data.removeColumns(dateColumnName);
                     data = data.addColumns(DateColumn.create(dateColumnName,lDates));
-                    flagTmp = true;
+                    timeFlag = true;
                 }
                 else {
-                    invalidFile.setText("There is some issue in file please check and re-upload!");
+
                     invalidFile.setVisible(true);
                 }
 
             }
 
-            if(flagTmp){
+            if(data.column(dateColumnName).type()!= ColumnType.LOCAL_DATE && data.column(dateColumnName).type()!= ColumnType.LOCAL_DATE_TIME ){
+                timeFlag = false;
+                String oldTxt = invalidFile.getText();
+                String pre = "There is issue in ";
+                if(oldTxt.length()> pre.length()){
+                    invalidFile.setText(oldTxt+" Date Column Selection, ");
+                }
+                else {
+                    invalidFile.setText("There is issue in Date Column Selection,");
+                }
+                invalidFile.setVisible(true);
+            }else {
+                timeFlag = true;
+            }
+
+            if(invalidFile.isVisible()){
+                invalidFile.setText(invalidFile.getText()+" Please correct or re-upload file!");
+            }
+
+            if(timeFlag && categoryFlag && salesFlag){
                 data = data.retainColumns(dateColumnName,categoryColName,salesColName);
                 for(String col : data.columnNames()){
                     System.out.println(data.column(col).type());

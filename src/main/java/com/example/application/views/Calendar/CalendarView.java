@@ -109,6 +109,8 @@ public class CalendarView extends Div {
 //        System.out.println("Su Data Sample");
         int jk = 0;
         sampleService.productCategories = new ArrayList<>();
+        String insufficientString = "There is insufficient data for forecast showing only historical for categories:size {";
+        boolean insufficient = false;
         for(String col:colvas){
             jk++;
             sampleService.productCategories.add(col);
@@ -188,7 +190,9 @@ public class CalendarView extends Div {
 
                 }
                 else {
-                    sampleService.sampleData = "There is insufficient data for forecast!";
+                    insufficientString = insufficientString+col+":"+allTables.get(col).rowCount()+",";
+                    sampleService.sampleData = insufficientString;
+                    insufficient =true;
                 }
 
 
@@ -201,6 +205,11 @@ public class CalendarView extends Div {
 
 
         }
+        if(insufficient){
+            insufficientString = insufficientString+" }";
+            sampleService.sampleData = insufficientString;
+        }
+
 //        System.out.println("Processing Had been Completed! Loading the Dashboard:"+allTables.keySet());
         sampleService.allTables = allTables;
 //

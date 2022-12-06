@@ -12,6 +12,7 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.listbox.MultiSelectListBox;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,7 @@ public class Dashboard extends Div {
 
     public String sampleVariable = "No Variable Arrived";
 
-    TextField sampleTextField = new TextField();
+    TextArea sampleTextField = new TextArea();
 
     MultiSelectListBox<String> listBox = new MultiSelectListBox<>();
     TextField topProdicts = new TextField("Top Categories to show");
@@ -62,12 +63,14 @@ public class Dashboard extends Div {
     }
 
     public void addButtons(){
+        topProdicts.setWidthFull();
         FormLayout vl = new FormLayout(topProdicts,update);
         add(vl);
     }
 
     public void writeTextButton(){
         VerticalLayout vl = new VerticalLayout();
+        sampleTextField.setWidthFull();
         vl.add(sampleTextField);
 
         List<Series> seriess = new ArrayList<>();
